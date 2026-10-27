@@ -2,7 +2,8 @@
    Fitur: katalog destinasi Indonesia, DOM, event, search/filter/sort,
    Smart Destination Finder (mencari dari katalog), detail dialog,
    wishlist/localStorage + estimasi biaya per orang, trip planner & validasi.
-   Foto destinasi dicari berdasarkan judul melalui Wikipedia API.
+   Foto destinasi dicari berdasarkan judul melalui Wikipedia/Wikimedia API;
+   gambar cadangan lokal ada di folder images/.
 */
 "use strict";
 
@@ -142,10 +143,10 @@ const $ = (selector, root=document) => root.querySelector(selector);
 const $$ = (selector, root=document) => [...root.querySelectorAll(selector)];
 const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const byName = name => rawDestinations.find(item => item.name === name);
-function placeholderPhoto(name){
-  const safe=String(name||"Foto destinasi").replace(/[&<>"']/g," ").slice(0,48);
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#dcece2"/><stop offset="1" stop-color="#f4eee0"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><circle cx="950" cy="150" r="70" fill="#fff" opacity=".55"/><path d="M0 560 Q220 420 430 550 T850 510 T1200 500 V700 H0Z" fill="#b5d1c0"/><text x="600" y="365" text-anchor="middle" font-family="Arial,sans-serif" font-size="42" fill="#245f47">${safe}</text><text x="600" y="420" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" fill="#49695a">Foto lokasi belum tersedia</text></svg>`;
-  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+const CATEGORY_IMAGES={"Pantai":"images/pantai.svg","Gunung":"images/gunung.svg","Budaya":"images/budaya.svg","Alam":"images/alam.svg","Taman Nasional":"images/taman-nasional.svg"};
+function placeholderPhoto(name, category){
+  // Gambar cadangan lokal (folder images/) sesuai kategori; dipakai sebelum/jika foto online tidak tersedia.
+  return CATEGORY_IMAGES[category] || CATEGORY_IMAGES[byName(name)?.category] || "images/alam.svg";
 }
 
 let wishlist = loadWishlist();
@@ -172,7 +173,7 @@ function toggleWishlist(name){
   persistWishlist(); renderDestinations(); renderWishlist(); syncLiveFavorites();
 }
 function photoMarkup(destination, className="destination-photo"){
-  return `<img class="${className}" data-photo-title="${escapeHTML(destination.name)}" alt="Foto ${escapeHTML(destination.name)}" loading="lazy" src="${placeholderPhoto(destination.name)}">`;
+  return `<img class="${className}" data-photo-title="${escapeHTML(destination.name)}" alt="Foto ${escapeHTML(destination.name)}" loading="lazy" src="${placeholderPhoto(destination.name,destination.category)}">`;
 }
 function cardMarkup(destination){
   const favorite=isFavorite(destination.name);
@@ -339,7 +340,7 @@ async function loadMatchingPhotos(root=document){
     const image=await findMatchingPhoto(item.name,item.province);
     if(!img.isConnected)continue;
     if(image){
-      img.onerror=()=>{img.onerror=null;img.src=placeholderPhoto(item.name);};
+      img.onerror=()=>{img.onerror=null;img.src=placeholderPhoto(item.name,item.category);};
       img.src=image;
     }
   }
@@ -464,8 +465,18 @@ function populateLiveSuggestions(){
   if(list)list.innerHTML=rawDestinations.map(item=>`<option value="${escapeHTML(item.name)}">${escapeHTML(item.province)}</option>`).join("");
 }
 
+/* Gambar dengan rantai cadangan: images/*.jpg -> foto online -> ilustrasi lokal (images/*.svg) */
+function setupImageFallbacks(){
+  $$("img[data-fallbacks]").forEach(img=>{
+    const queue=img.dataset.fallbacks.split("|").filter(Boolean);
+    const next=()=>{ if(queue.length) img.src=queue.shift(); else img.onerror=null; };
+    img.addEventListener("error",next);
+    if(img.complete&&img.naturalWidth===0) next();
+  });
+}
 function init(){
   $("#currentYear").textContent=new Date().getFullYear();
+  setupImageFallbacks();
   populateDestinationSelect("tripDestinationSuggestions");
   populateRecommendationSuggestions();populateLiveSuggestions();
   renderDestinations();renderWishlist();updateRecommendationLinks();
@@ -551,3 +562,31 @@ function init(){
   $$("#mainNav a").forEach(link=>link.addEventListener("click",()=>{$("#mainNav").classList.remove("open");$("#menuToggle").setAttribute("aria-expanded","false");$("#menuToggle").textContent="☰";}));
 }
 document.addEventListener("DOMContentLoaded",init);
+
+
+/* Form pengunjung: validasi sederhana dan ringkasan hasil di browser */
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector("#studentForm");
+  if (!form) return;
+  const result = document.querySelector("#studentFormResult");
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    form.classList.add("was-validated");
+    if (!form.checkValidity()) {
+      result.hidden = true;
+      return;
+    }
+    const nama = document.querySelector("#studentName").value.trim();
+    const kota = document.querySelector("#studentCity").value;
+    const hobi = [...form.querySelectorAll('input[name="hobi"]:checked')].map((item) => item.value);
+    result.replaceChildren();
+    const heading = document.createElement("strong");
+    heading.textContent = `Terima kasih, ${nama}!`;
+    const detail = document.createElement("p");
+    detail.className = "mb-0 mt-2";
+    detail.textContent = `Kota: ${kota}. Hobi: ${hobi.length ? hobi.join(", ") : "belum dipilih"}. Data ini hanya ditampilkan sebagai contoh dan tidak disimpan ke server.`;
+    result.append(heading, detail);
+    result.hidden = false;
+    result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+});
