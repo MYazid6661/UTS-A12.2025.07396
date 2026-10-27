@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Jelajah ID — jelajahi destinasi wisata Indonesia, simpan wishlist, dan rencanakan perjalanan.">
+  <title>Jelajah ID | Explore Indonesia</title>
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Jelajah ID beranda"><span class="brand-mark">J</span><span>jelajah<span class="brand-accent">ID</span></span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Buka menu" aria-expanded="false">☰</button>
+    <nav class="main-nav" id="mainNav">
+      <a href="#live-finder">Cari Wisata</a><a href="#destinations">Katalog</a><a href="#wishlist">Wishlist <span id="navWishlistCount">0</span></a><a href="#trip-planner">Trip Planner</a><a href="#recommendations">Rekomendasi</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero hero-photo-background" id="home">
+      <div class="hero-content">
+        <p class="eyebrow light">JELAJAHI KEINDAHAN NUSANTARA</p>
+        <h1>Temukan Destinasi<br><em>Impianmu di Indonesia.</em></h1>
+        <p class="hero-description">Dari pantai yang menenangkan hingga gunung yang menantang, temukan pengalaman perjalanan terbaik di seluruh penjuru Indonesia.</p>
+        <form class="hero-search" id="heroSearchForm">
+          <label class="sr-only" for="heroDestinationInput">Cari destinasi wisata</label>
+          <span class="hero-search-icon" aria-hidden="true">⌕</span>
+          <input id="heroDestinationInput" type="search" placeholder="Cari destinasi, kota, atau tempat wisata..." autocomplete="off">
+          <label class="sr-only" for="heroCategory">Kategori destinasi</label>
+          <select id="heroCategory"><option value="">Pilih kategori</option><option value="Pantai">Pantai</option><option value="Gunung">Gunung</option><option value="Budaya">Budaya</option><option value="Alam">Alam</option><option value="Taman Nasional">Taman Nasional</option></select>
+          <button type="submit" class="hero-search-button"><span aria-hidden="true">⌕</span> Cari Destinasi</button>
+        </form>
+        <div class="hero-category-pills" aria-label="Kategori wisata populer">
+          <button type="button" data-hero-category="Pantai"><span>◉</span><span><b>Pantai</b><small>Eksotisme laut Indonesia</small></span></button>
+          <button type="button" data-hero-category="Gunung"><span>♧</span><span><b>Gunung</b><small>Petualangan di ketinggian</small></span></button>
+          <button type="button" data-hero-category="Budaya"><span>⌂</span><span><b>Budaya</b><small>Warisan tak ternilai</small></span></button>
+          <button type="button" data-hero-category="Alam"><span>✦</span><span><b>Alam</b><small>Keajaiban alam Indonesia</small></span></button>
+        </div>
+        <div class="hero-bottom-note"><span class="hero-note-line"></span><span>Jelajahi Indonesia. Temukan cerita indah.</span></div>
+      </div>
+      <div class="hero-photo" aria-hidden="true"></div>
+      <div class="hero-image-caption"><span>01 / EXPLORE</span><span>INDONESIA · YOUR NEXT STORY</span></div>
+    </section>
+
+    <section class="section intro-section">
+      <div><p class="eyebrow">JELAJAH LEBIH MUDAH</p><h2>Liburan impianmu<br>dimulai dari sini.</h2></div>
+      <p class="intro-copy">Temukan inspirasi wisata, simpan tempat yang ingin kamu kunjungi, lalu susun rencana perjalanan awal sesuai waktu dan anggaranmu.</p>
+    </section>
+
+
+    <section class="section live-finder-section" id="live-finder">
+      <div class="section-heading"><div><p class="eyebrow">CARI DARI DESTINASI PILIHAN</p><h2>Smart Destination Finder</h2><p>Ketik nama tempat, provinsi, atau kategori. Hasil pencarian diambil dari daftar Destinasi Pilihan Indonesia di bawah, lalu kamu bisa langsung menghitung estimasi biaya perjalanan.</p></div><span class="result-pill">Pencarian katalog</span></div>
+      <form id="liveSearchForm" class="live-search-form">
+        <label for="liveDestinationInput">Kamu ingin pergi ke mana?</label>
+        <div class="live-search-row"><input id="liveDestinationInput" type="search" list="liveDestinationSuggestions" placeholder="Contoh: Labuan Bajo, Bali, Gunung, Taman Nasional..." autocomplete="off" required><datalist id="liveDestinationSuggestions"></datalist><button class="button button-primary" type="submit">Cari destinasi <span>→</span></button></div>
+        <p class="live-finder-note">Pencarian mengikuti <strong>125 destinasi</strong> pada Destinasi Pilihan Indonesia. Coba nama tempat (Raja Ampat), provinsi (Bali), atau kategori (Pantai, Gunung, Budaya, Alam, Taman Nasional). Foto membutuhkan koneksi internet.</p>
+      </form>
+      <div id="liveSearchStatus" class="live-search-status" role="status" aria-live="polite"></div>
+      <div id="liveSearchResults" class="live-search-results"></div>
+      <div id="liveDestinationDetail" class="live-destination-detail" hidden></div>
+      <div id="estimatePanel" class="estimate-panel" hidden>
+        <div><p class="eyebrow">PERKIRAAN AWAL</p><h3 id="estimateTitle">Estimasi perjalanan</h3><p class="estimate-disclaimer">Angka simulasi untuk tugas/perencanaan awal, bukan tarif resmi atau harga real-time.</p></div>
+        <form id="estimateForm" class="estimate-form">
+          <div class="estimate-fields"><label>Jumlah hari<input id="estimateDays" type="number" min="1" max="30" value="3" required></label><label>Jumlah orang<input id="estimatePeople" type="number" min="1" max="20" value="2" required></label><label>Gaya perjalanan<select id="estimateStyle"><option value="hemat">Hemat</option><option value="standard" selected>Standar</option><option value="nyaman">Nyaman</option></select></label><label>Transportasi utama<select id="estimateTransport"><option value="lokal">Transportasi lokal</option><option value="mobil">Mobil/rental</option><option value="antarkota">Perjalanan antarkota</option><option value="pesawat">Pesawat + lokal</option></select></label></div>
+          <button class="button button-primary" type="submit">Hitung estimasi biaya</button>
+        </form>
+        <div id="estimateResult" class="estimate-result" hidden aria-live="polite"></div>
+        <div class="estimate-actions"><button class="button button-outline" id="sendToPlanner" type="button">Lanjut ke Trip Planner</button><a id="liveMapsLink" class="button button-outline" target="_blank" rel="noopener">Buka lokasi di Google Maps ↗</a></div>
+      </div>
+    </section>
+
+    <section class="section destination-section" id="destinations">
+      <div class="section-heading">
+        <div><p class="eyebrow">PILIHAN EDITOR</p><h2>Destinasi Pilihan Indonesia</h2><p>Inspirasi tempat wisata dari berbagai wilayah Indonesia. Smart Destination Finder di atas mencari dari daftar ini; tempat yang belum ada bisa dicari lewat Google Maps.</p></div>
+        <span class="result-pill"><span id="destinationCount">125</span> destinasi</span>
+      </div>
+      <div class="filter-panel" id="finder">
+        <div class="search-box"><span aria-hidden="true">⌕</span><input type="search" id="searchInput" placeholder="Cari nama wisata atau provinsi..." aria-label="Cari destinasi"></div>
+        <div class="filter-row" id="categoryFilters" aria-label="Filter kategori">
+          <button class="filter-chip active" data-category="Semua">Semua</button>
+          <button class="filter-chip" data-category="Pantai">Pantai</button>
+          <button class="filter-chip" data-category="Gunung">Gunung</button>
+          <button class="filter-chip" data-category="Budaya">Budaya</button>
+          <button class="filter-chip" data-category="Alam">Alam</button>
+          <button class="filter-chip" data-category="Taman Nasional">Taman Nasional</button>
+        </div>
+        <div class="filter-bottom"><span id="filterSummary">Menampilkan destinasi pilihan</span><div class="filter-controls"><label for="sortSelect">Urutkan</label><select id="sortSelect"><option value="featured">Pilihan</option><option value="az">Nama A–Z</option><option value="za">Nama Z–A</option></select><button class="reset-button" id="resetFilters" type="button">Reset</button></div></div>
+      </div>
+      <div class="destination-grid" id="destinationGrid" aria-live="polite"></div>
+      <p class="empty-state" id="destinationEmpty" hidden>Destinasi tidak ditemukan. Coba kata kunci atau kategori lain.</p>
+      <div class="load-more-wrap"><button class="button button-outline" id="loadMore" type="button">Lihat destinasi lainnya <span>↓</span></button></div>
+    </section>
+
+    <section class="section wishlist-section" id="wishlist">
+      <div class="section-heading"><div><p class="eyebrow">SIMPAN TEMPAT FAVORIT</p><h2>My Travel Wishlist</h2><p>Daftar kecil untuk perjalanan besar berikutnya. Hitung estimasi biaya semua destinasi yang kamu simpan.</p></div><span class="result-pill"><span id="wishlistCount">0</span> tersimpan</span></div>
+      <div class="wishlist-toolbar"><p>Wishlist disimpan di browser ini menggunakan <code>localStorage</code>.</p><button class="button button-small button-outline" id="clearWishlist" type="button">Hapus semua</button></div>
+      <div class="destination-grid" id="wishlistGrid"></div>
+      <p class="empty-state" id="wishlistEmpty">Belum ada destinasi tersimpan. Tekan ♡ pada kartu wisata untuk menambahkannya.</p>
+      <div id="wishlistEstimatePanel" class="estimate-panel wishlist-estimate-panel" hidden>
+        <div><p class="eyebrow">PERKIRAAN BIAYA WISHLIST</p><h3>Estimasi perjalanan wishlist</h3><p class="estimate-disclaimer">Angka simulasi untuk perencanaan awal, bukan tarif resmi atau harga real-time. Hasil diperbarui otomatis saat kamu mengubah isian.</p></div>
+        <form id="wishlistEstimateForm" class="estimate-form">
+          <div class="estimate-fields"><label>Hari per destinasi<input id="wishDays" type="number" min="1" max="30" value="3" required></label><label>Jumlah orang<input id="wishPeople" type="number" min="1" max="20" value="2" required></label><label>Gaya perjalanan<select id="wishStyle"><option value="hemat">Hemat</option><option value="standard" selected>Standar</option><option value="nyaman">Nyaman</option></select></label><label>Transportasi utama<select id="wishTransport"><option value="lokal">Transportasi lokal</option><option value="mobil">Mobil/rental</option><option value="antarkota">Perjalanan antarkota</option><option value="pesawat">Pesawat + lokal</option></select></label></div>
+          <button class="button button-primary" type="submit">Hitung estimasi wishlist</button>
+        </form>
+        <div id="wishlistEstimateResult" class="estimate-result" hidden aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section planner-section" id="trip-planner">
+      <div class="planner-intro"><p class="eyebrow light">YOUR NEXT ADVENTURE</p><h2>Plan it.<br><em>Live it.</em></h2><p>Buat gambaran itinerary dan pembagian anggaran sebelum berangkat.</p><div class="planner-note">Catatan: hasil adalah simulasi edukatif, bukan harga atau jadwal aktual.</div></div>
+      <div class="planner-card">
+        <div class="planner-card-heading"><span class="step-icon">✦</span><div><h3>Trip Planner</h3><p>Isi detail perjalananmu.</p></div></div>
+        <form id="tripForm" novalidate>
+          <div class="form-field"><label for="tripDestination">Destinasi tujuan</label><input id="tripDestination" type="text" list="tripDestinationSuggestions" placeholder="Ketik nama destinasi" required><datalist id="tripDestinationSuggestions"></datalist><small class="field-hint">Bisa pilih dari katalog atau ketik tempat lain.</small><small class="field-error" id="destinationError"></small></div>
+          <div class="form-two-col"><div class="form-field"><label for="tripDays">Lama perjalanan</label><div class="input-with-unit"><input id="tripDays" type="number" min="1" max="30" step="1" value="3" required><span>hari</span></div><small class="field-hint">1–30 hari</small><small class="field-error" id="daysError"></small></div>
+          <div class="form-field"><label for="tripBudget">Anggaran/orang</label><div class="input-with-unit"><span>Rp</span><input id="tripBudget" type="number" min="100000" max="100000000" step="50000" value="1500000" required></div><small class="field-hint">Minimal Rp100.000</small><small class="field-error" id="budgetError"></small></div></div>
+          <button class="button button-primary full-width" type="submit">Buat rencana perjalanan <span>→</span></button>
+        </form>
+        <div id="tripResult" class="trip-result" hidden aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section recommendations-section" id="recommendations">
+      <div class="section-heading"><div><p class="eyebrow">LENGKAPI PERJALANAN</p><h2>Travel Essentials</h2><p>Temukan layanan pendukung di sekitar destinasi pilihanmu.</p></div></div>
+      <div class="recommendation-location"><label for="recommendationDestination">Cari layanan berdasarkan destinasi <span class="optional-label">(opsional)</span></label><div class="recommendation-search-wrap"><span aria-hidden="true">⌕</span><input id="recommendationDestination" type="search" list="recommendationDestinations" placeholder="Ketik kota atau destinasi, misalnya Bali..." autocomplete="off"><datalist id="recommendationDestinations"></datalist><button type="button" id="clearRecommendationSearch" aria-label="Hapus pencarian" title="Hapus pencarian">×</button></div><small class="recommendation-hint">Ketik beberapa huruf untuk saran otomatis, atau kosongkan untuk mencari layanan secara umum.</small></div>
+      <div class="recommendation-grid">
+        <article class="recommendation-card"><img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=900&q=85" alt="Mobil untuk transportasi perjalanan" loading="lazy"><div class="recommendation-content"><span class="recommendation-tag">GETTING AROUND</span><h3>Transportasi</h3><p>Temukan rental kendaraan, transportasi umum, dan layanan antar-jemput.</p><a class="recommendation-link" data-service="transportasi umum rental kendaraan" data-default-label="Cari transportasi ↗" data-label-with-place="Cari transportasi di lokasi ini ↗" href="https://www.google.com/maps" target="_blank" rel="noopener">Cari transportasi ↗</a></div></article>
+        <article class="recommendation-card"><img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=85" alt="Hotel dan penginapan" loading="lazy"><div class="recommendation-content"><span class="recommendation-tag">STAY COMFORTABLY</span><h3>Hotel & Penginapan</h3><p>Bandingkan lokasi penginapan untuk beristirahat selama liburan.</p><a class="recommendation-link" data-service="hotel penginapan homestay" data-default-label="Cari penginapan ↗" data-label-with-place="Cari penginapan di lokasi ini ↗" href="https://www.google.com/maps" target="_blank" rel="noopener">Cari penginapan ↗</a></div></article>
+        <article class="recommendation-card"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=85" alt="Hidangan di tempat makan" loading="lazy"><div class="recommendation-content"><span class="recommendation-tag">LOCAL FLAVOURS</span><h3>Tempat Makan</h3><p>Jelajahi restoran dan kuliner lokal di sekitar tujuan wisata.</p><a class="recommendation-link" data-service="restoran tempat makan kuliner lokal" data-default-label="Cari tempat makan ↗" data-label-with-place="Cari tempat makan di lokasi ini ↗" href="https://www.google.com/maps" target="_blank" rel="noopener">Cari tempat makan ↗</a></div></article>
+        <article class="recommendation-card"><img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=900&q=85" alt="Kafe dan tempat nongkrong" loading="lazy"><div class="recommendation-content"><span class="recommendation-tag">SLOW DOWN</span><h3>Tempat Nongkrong</h3><p>Temukan kafe dan tempat santai untuk mengakhiri hari.</p><a class="recommendation-link" data-service="kafe tempat nongkrong" data-default-label="Cari tempat nongkrong ↗" data-label-with-place="Cari tempat nongkrong di lokasi ini ↗" href="https://www.google.com/maps" target="_blank" rel="noopener">Cari tempat nongkrong ↗</a></div></article>
+      </div>
+      <p class="recommendation-disclaimer">Tautan membuka pencarian Google Maps. Periksa ulasan, harga, jam operasional, dan ketersediaan sebelum memesan.</p>
+    </section>
+
+    <section class="about-section" id="about"><div><p class="eyebrow light">TENTANG JELAJAH ID</p><h2>Indonesia punya<br>cerita untuk semua.</h2></div><p>Jelajah ID adalah proyek pembelajaran Pemrograman Web yang menggabungkan katalog destinasi, pencarian interaktif, wishlist berbasis browser, dan perencanaan perjalanan sederhana.</p></section>
+  </main>
+
+  <footer class="site-footer"><a class="brand footer-brand" href="#home"><span class="brand-mark">J</span><span>jelajah<span class="brand-accent">ID</span></span></a><p>Eksplorasi lokal, cerita tanpa batas.</p><div class="footer-contact"><span>Masukan & konsultasi proyek</span><a href="mailto:muhamadyazid167@gmail.com">muhamadyazid167@gmail.com</a></div><span>© <span id="currentYear"></span> Jelajah ID · Proyek UTS Pemrograman Web</span><div class="student-identity"><div class="identity-person"><span class="identity-avatar" aria-hidden="true">MY</span><div class="identity-text"><small>Disusun oleh</small><strong>M. Yazid</strong></div></div><div class="identity-nim"><small>NIM</small><strong>A12.2025.07396</strong></div></div></footer>
+
+  <dialog id="destinationDialog" class="destination-dialog"><button class="dialog-close" id="closeDialog" aria-label="Tutup detail">×</button><div id="dialogContent"></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
