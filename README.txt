@@ -1,26 +1,27 @@
-JELAJAH ID — REDESAIN PREMIUM
+JELAJAH ID — PROYEK UTS PEMROGRAMAN WEB
 
 ISI FOLDER
-- index.html: struktur website
-- style.css: desain responsif, hero dengan foto penuh dan overlay gradasi hijau transparan
-- script.js: interaksi pencarian, filter katalog, detail destinasi, wishlist, estimasi, dan trip planner
-- IDENTITAS_OPSIONAL.txt: potongan kode identitas jika diminta dosen
+- index.html: struktur landing page dan form pengunjung.
+- style.css: tampilan, efek hover, dan aturan responsive.
+- script.js: fitur interaktif website dan validasi form.
+- images/: ilustrasi cadangan dan favicon.
+- unduh-gambar.sh / unduh-gambar.bat: skrip opsional untuk mengunduh beberapa foto lokal.
 
 CARA MENJALANKAN
-1. Ekstrak ZIP.
-2. Buka folder ExploreIndonesia_UTS di Visual Studio Code.
-3. Buka index.html di browser. Bisa juga memakai ekstensi Live Server.
-4. Tidak membutuhkan npm atau server backend.
-5. Internet diperlukan untuk foto eksternal dan Google Maps.
+1. Ekstrak folder ZIP.
+2. Buka folder proyek ini di Visual Studio Code.
+3. Klik kanan index.html lalu pilih Open with Live Server, atau buka index.html langsung di browser.
+4. Internet diperlukan untuk Bootstrap CDN, font/foto eksternal, dan beberapa tautan. Tidak perlu npm atau backend.
 
-FITUR
-- Hero utama dengan foto latar, overlay gradasi hijau transparan, kolom pencarian dan shortcut kategori.
-- Smart Destination Finder mencari langsung dari 125 Destinasi Pilihan Indonesia (nama, provinsi, kategori), lengkap dengan foto, detail, wishlist, dan estimasi biaya per orang.
-- Katalog inspirasi 125 destinasi Indonesia dengan filter, pencarian, pengurutan, dan detail.
-- Wishlist menggunakan localStorage pada browser yang sama, dilengkapi estimasi biaya semua destinasi (hari per destinasi, jumlah orang, gaya, transportasi) dengan rumus yang sama seperti Finder.
-- Trip Planner dan estimasi biaya berupa simulasi edukatif, bukan harga real-time.
-- Travel Essentials membuka pencarian Google Maps sesuai lokasi yang diketik.
-- Kontak masukan/konsultasi: muhamadyazid167@gmail.com.
+PENYESUAIAN SESUAI INSTRUKSI UTS
+- Footer menampilkan nama M. Yazid dan NIM A12.2025.07396.
+- Form Nama menggunakan input type=text.
+- Alamat menggunakan textarea.
+- Kota menggunakan select dengan pilihan Semarang, Kudus, Demak, Pekalongan, Tegal, Surabaya, dan Jakarta.
+- Hobi menggunakan checkbox: Membaca, Koding, Berenang, dan Menggambar.
+- Hover tersedia pada tautan navigasi, tombol, kartu destinasi, kartu rekomendasi, dan pilihan hobi.
+- CSS responsive menyesuaikan layout pada layar tablet dan ponsel.
+- JavaScript memvalidasi form dan menampilkan ringkasan setelah tombol kirim ditekan.
 
 CATATAN
-Foto eksternal membutuhkan internet. Periksa hasil pencarian, ulasan, lokasi, jam buka, dan harga langsung pada penyedia sebelum bepergian. Identitas nama/NIM tidak dipasang di halaman utama; gunakan IDENTITAS_OPSIONAL.txt hanya bila dosen meminta.
+Form ini hanya demonstrasi front-end. Data tidak dikirim atau disimpan ke server/database. Pilihan hobi tidak wajib diisi; pengguna dapat memilih lebih dari satu. Repository GitHub dibuat sendiri dengan nama UTS-NIM dan URL sebenarnya dicantumkan pada laporan.
